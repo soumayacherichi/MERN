@@ -1,11 +1,11 @@
 import './App.css';
-import todo from './components/todo'
+import TodoList from './components/todo';
 
 function App() {
   return (
     <div className="App">
       <fieldset>
-
+      <TodoList/>
       </fieldset>
     </div>
   );

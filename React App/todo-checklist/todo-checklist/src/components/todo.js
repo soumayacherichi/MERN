@@ -1,61 +1,62 @@
 import React, { useState } from 'react';
 
-export default () => {
-  const [Val, setVal] = useState('');
-  const [list, setList] = useState([]);
+function TodoList() {
+  const [tasks, setTasks] = useState([
+    { text: 'React', checked: false },
+    { text: 'PowerBI', checked: false },
+    { text: 'Coin Flipped', checked: false },
+  ]);
 
-  function add(e) {
-    e.preventDefault();
+  const handleTaskChange = (index, checked) => {
+    setTasks(tasks.map((task, i) => {
+      if (i === index) {
+        return { ...task, checked };
+      } else {
+        return task;
+      }
+    }));
+  };
 
-    if(Val === '') return;
+  const handleTaskRemove = (index) => {
+    setTasks(tasks.filter((task, i) => i !== index));
+  };
 
-    setList([...list, {
-      text: Val,
-      completed: false
-    }]);
-
-    setVal('');
-  }
-
-  function remove(index) {
-    setList(list.filter((_item, i) => i !== index));
-  }
-
-  function toggleChecked(index) {
-    const obj = {
-      ...list[index]
-    };
-
-    obj.completed = !obj.completed;
-
-    setList([
-      ...list.slice(0, index),
-      obj
-    ].concat(list.slice(index + 1)));
-  }
+  const handleTaskAdd = (text) => {
+    setTasks([...tasks, { text, checked: false }]);
+  };
 
   return (
     <div>
-      {list.map((item, i) => (
-        <div key={i}>
-          <span style={{ textDecoration: item.completed && 'line-through' }}>{item.text}</span>
-          <input
-            type="checkbox"
-            checked={item.completed}
-            onClick={() => toggleChecked(i)}
-            readOnly
-          />
-          <button onClick={() => remove(i)}>Delete</button>
-        </div>
-      ))}
-
-      <form onSubmit={add}>
-        <input
-          onChange={e => setVal(e.target.value)}
-          value={Val}
-        />
-        <button>Add</button>
+      <h1>Todo List</h1>
+      <ul>
+        {tasks.map((task, index) => (
+          <li key={index}>
+            <label>
+              <input type="checkbox"
+                     checkedOk={task.checked}
+                     onChange={(event) => handleTaskChange(index, event.target.checkedOk)}
+              />
+              <span style={{ textDecoration: task.checked ? 'line-through' : 'none' }}>
+                {task.text}
+              </span>
+            </label>
+            <button onClick={() => handleTaskRemove(index)}>Remove</button>
+          </li>
+        ))}
+      </ul>
+      <form onSubmit={(event) => {
+        event.preventDefault();
+        const text = event.target.elements.task.value.trim();
+        if (text !== '') {
+          handleTaskAdd(text);
+          event.target.reset();
+        }
+      }}>
+        <input name="task" placeholder="New task" />
+        <button type="submit">Add</button>
       </form>
     </div>
-  )
+  );
 }
+
+export default TodoList;
