@@ -5,12 +5,6 @@ const People = (props) => {
     const [people, setPeople] = useState(null)
     const {peopleID} =useParams()
     const navigate = useNavigate()
-    const goBack = () =>{
-        navigate(-1)
-    }
-    const goNext = ()=>{
-        navigate(+1)
-    }
     useEffect(()=>{
         axios.get(`https://swapi.dev/api/people/${peopleID}`)
         .then(response=>{
@@ -24,9 +18,6 @@ const People = (props) => {
   return (
     <fieldset>
         <legend>People</legend>
-        {/* <h2>people : {JSON.stringify(people)}</h2> */}
-        <button onClick={()=>{goBack()}}>Previous</button> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
-        <button onClick={goNext}>Next</button>
         {people ?
         <>
             <h3>People Number : {peopleID} -- Name : {people.name}</h3>
